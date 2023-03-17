@@ -1,15 +1,20 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
-
-from django.http import HttpResponse
+from posts.models import Group, Post
 
 
 def index(request):
+    posts = Post.objects.all()
     template = 'posts/index.html'
-    return render(request, template)
+    context = {'posts': posts}
+    return render(request, template, context)
 
 
-def group_posts(request):
+def group_posts(request, slug):
+    group = get_object_or_404(Group, slug=slug)
+    posts = group.posts.all()
     template = 'posts/group_list.html'
-    return render(request, template)
+    context = {'group': group, 'posts': posts}
+    return render(request, template, context)
